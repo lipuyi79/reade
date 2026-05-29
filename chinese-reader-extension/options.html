@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>中文框选朗读 - 设置</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main class="main">
+      <header class="page-header">
+        <h1>中文框选朗读</h1>
+        <p class="sub">在网页上拖拽出一个矩形区域，自动提取并朗读其中的中文。</p>
+      </header>
+
+      <section class="card">
+        <h2>使用方式</h2>
+        <ol class="usage">
+          <li>点击工具栏图标，按"开启框选朗读"，或使用快捷键 <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>R</kbd>。</li>
+          <li>在网页上按住鼠标左键拖动，框出要朗读的区域。</li>
+          <li>松开后选区进入"调整阶段"——可以拖动 8 个把手缩放、拖动中心移动；按 <kbd>Enter</kbd> 或点 ✓确认。</li>
+          <li>视频字幕跟读：按 <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>V</kbd>，框选字幕区，确认后会持续监听并自动朗读新字幕。</li>
+          <li>按 <kbd>Esc</kbd>、再次点击图标或快捷键可退出。</li>
+        </ol>
+      </section>
+
+      <section class="card">
+        <h2>朗读设置</h2>
+        <div class="form">
+          <div class="field">
+            <label for="rate">语速 <span id="rateVal" class="num">1.0</span></label>
+            <input type="range" id="rate" min="0.5" max="2" step="0.1" />
+          </div>
+          <div class="field">
+            <label for="pitch">音调 <span id="pitchVal" class="num">1.0</span></label>
+            <input type="range" id="pitch" min="0" max="2" step="0.1" />
+          </div>
+          <div class="field">
+            <label for="volume">音量 <span id="volumeVal" class="num">100%</span></label>
+            <input type="range" id="volume" min="0" max="2" step="0.05" />
+            <p class="hint">0-100% 控制朗读音量；100-200% 通过 Web Audio 同步放大网页内的视频/音频。</p>
+          </div>
+          <div class="field">
+            <label for="voicePreset">音色预设（推荐）</label>
+            <select id="voicePreset"></select>
+            <p class="hint">10 种 Microsoft 中文神经网络音色。如果显示"未安装"，请在 Edge 中使用此扩展（Edge 自带在线神经语音）。</p>
+          </div>
+          <div class="field">
+            <label for="voice">语音（完整列表）</label>
+            <select id="voice"></select>
+            <p class="hint">如果没选预设，将使用此处指定的声源；都不选则使用系统默认中文。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>过滤与外观</h2>
+        <div class="form">
+          <div class="field">
+            <label class="check">
+              <input type="checkbox" id="chineseOnly" />
+              <span>仅朗读中文（自动过滤英文/符号）</span>
+            </label>
+          </div>
+          <div class="field">
+            <label class="check">
+              <input type="checkbox" id="mediaBoost" />
+              <span>音量超过 100% 时同步放大网页 video/audio（用于视频本身音量小的情况）</span>
+            </label>
+          </div>
+          <div class="field">
+            <label for="highlightColor">框选颜色</label>
+            <input type="color" id="highlightColor" />
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>测试朗读</h2>
+        <div class="preview">
+          <textarea id="previewText" rows="3">这是一段用于测试的中文文本，可以修改后试听效果。</textarea>
+          <div class="preview-actions">
+            <button id="previewBtn" class="btn btn-primary">试听</button>
+            <button id="stopBtn" class="btn">停止</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>快捷键</h2>
+        <ul class="shortcuts">
+          <li><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>R</kbd> ：开启 / 关闭框选朗读</li>
+          <li><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>V</kbd> ：开启 / 关闭视频字幕跟读</li>
+          <li><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> ：停止朗读</li>
+          <li><kbd>Enter</kbd> ：确认当前调整中的选区</li>
+          <li><kbd>Esc</kbd> ：退出当前模式</li>
+        </ul>
+        <p class="hint">如需修改快捷键，访问 <code>edge://extensions/shortcuts</code>。</p>
+      </section>
+
+      <section id="fbCfgCard" class="card" hidden>
+        <h2>Firebase 配置</h2>
+        <p class="hint">登录注册和留言板需要 Firebase 后端。先去 <a href="https://console.firebase.google.com/" target="_blank" rel="noopener">Firebase Console</a> 新建项目并启用「Authentication → Email/Password」和「Firestore Database」，再把以下两个值填到这里。详细步骤见 README。</p>
+        <div class="form">
+          <div class="field">
+            <label for="fbApiKey">Web API Key</label>
+            <input type="text" id="fbApiKey" placeholder="AIza..." autocomplete="off" />
+          </div>
+          <div class="field">
+            <label for="fbProjectId">Project ID</label>
+            <input type="text" id="fbProjectId" placeholder="your-project-id" autocomplete="off" />
+          </div>
+          <div class="preview-actions">
+            <button id="fbSaveCfg" class="btn btn-primary">保存配置</button>
+            <button id="fbClearCfg" class="btn btn-ghost">清除</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>账号</h2>
+        <div id="fbAuthSignedOut" class="form" hidden>
+          <div class="field">
+            <label for="fbEmail">邮箱</label>
+            <input type="email" id="fbEmail" autocomplete="email" />
+          </div>
+          <div class="field">
+            <label for="fbPassword">密码</label>
+            <input type="password" id="fbPassword" autocomplete="current-password" />
+          </div>
+          <div class="preview-actions">
+            <button id="fbLoginBtn" class="btn btn-primary">登录</button>
+            <button id="fbRegisterBtn" class="btn">注册</button>
+          </div>
+          <div id="fbAuthErr" class="auth-error"></div>
+        </div>
+        <div id="fbAuthSignedIn" class="signed-in" hidden>
+          <div class="signed-in-info">
+            <div class="signed-in-label">已登录</div>
+            <div id="fbCurEmail" class="signed-in-email"></div>
+          </div>
+          <button id="fbLogoutBtn" class="btn btn-ghost">退出登录</button>
+        </div>
+      </section>
+
+      <section id="fbBoardCard" class="card" hidden>
+        <h2>留言板</h2>
+        <p class="hint">留言内容仅管理员可在 Firestore 后台查看，前端不展示。</p>
+        <div id="fbBoard">
+          <div class="form">
+            <div class="field">
+              <label for="fbNickname">昵称（可选，默认用邮箱前缀）</label>
+              <input type="text" id="fbNickname" maxlength="24" />
+            </div>
+            <div class="field">
+              <label for="fbContent">留言内容</label>
+              <textarea id="fbContent" rows="3" maxlength="500" placeholder="说点什么吧（最多 500 字）"></textarea>
+            </div>
+            <div class="preview-actions">
+              <button id="fbPostBtn" class="btn btn-primary">发布</button>
+              <span id="fbBoardTip" class="hint"></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="page-footer">
+        <button id="resetBtn" class="btn btn-ghost">恢复默认</button>
+        <span id="savedTip" class="saved-tip"></span>
+      </footer>
+    </main>
+
+    <script src="firebase.js"></script>
+    <script src="options.js"></script>
+  </body>
+</html>
